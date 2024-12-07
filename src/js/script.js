@@ -206,7 +206,7 @@ const points = [
     element: document.querySelector(".floating-bubble-0"),
   },
   {
-    position: new THREE.Vector3(1.5, 0.4, -2.4),
+    position: new THREE.Vector3(1.5, 0.3, -2.4),
     element: document.querySelector(".floating-bubble-1"),
   },
   {

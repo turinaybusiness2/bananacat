@@ -743,13 +743,19 @@ button.active:hover {
   font-size: 15px;
   color: #774f38; /* Brown */
   background-color: #ece5ce; /* Beige */
-  padding: 30px;
+  padding: 20px;
   border-radius: 11px;
   position: relative;
   box-shadow: 5px 5px rgb(214, 156, 58); /* Blue */
   font-family: "Baloo 2", cursive;
 }
+#twitter p {
+  text-decoration: underline;
 
+  z-index: 15;
+  pointer-events: auto;
+  cursor: pointer;
+}
 .floating-bubble p:after {
   /* transform: translatey(0px); */
   /* animation: float2 5s ease-in-out infinite; */

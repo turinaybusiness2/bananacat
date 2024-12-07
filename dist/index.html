@@ -88,8 +88,8 @@
       src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
       type="module"
     ></script>
-    <script type="module" crossorigin src="/assets/index-D7ljwl0l.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-DIfl3mYL.css">
+    <script type="module" crossorigin src="/assets/index-Bvqb1oFd.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DQYi6v6f.css">
   </head>
   <body>
     <div class="loading">
@@ -116,13 +116,15 @@
       </div>
     </div>
     <div class="floating-bubble floating-bubble-0">
-      <p>Hello,<br />World!</p>
+      <p>
+        I'm not alone <br />Sometimes I'm not<br />I'm not alone<br />Hello???
+      </p>
     </div>
     <div class="floating-bubble floating-bubble-1">
-      <p>CA,<br />World!</p>
+      <p>CA,<br /></p>
     </div>
-    <div class="floating-bubble floating-bubble-2">
-      <p>X,<br />World!</p>
+    <div class="floating-bubble floating-bubble-2" id="twitter">
+      <p>@CatBananaAi</p>
     </div>
     <div id="button-container">
       <button class="big-button active" id="button-about">About</button>
@@ -211,6 +213,13 @@
             .catch((error) => {
               console.log("Autoplay blocked. Waiting for user interaction.");
             });
+        });
+      });
+      document.addEventListener("DOMContentLoaded", function () {
+        const twitterButton = document.getElementById("twitter");
+
+        twitterButton.addEventListener("click", function () {
+          window.open("https://twitter.com/CatBananaAi", "_blank"); // Redirect to Twitter profile
         });
       });
     </script>
