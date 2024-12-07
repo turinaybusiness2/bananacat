@@ -202,15 +202,15 @@ const stops = {
 };
 const points = [
   {
-    position: new THREE.Vector3(-1.5, 0.3, 0.75),
+    position: new THREE.Vector3(-1.5, 0.4, 0.75),
     element: document.querySelector(".floating-bubble-0"),
   },
   {
-    position: new THREE.Vector3(1.5, 0.3, -2.4),
+    position: new THREE.Vector3(1.5, 0.4, -2.4),
     element: document.querySelector(".floating-bubble-1"),
   },
   {
-    position: new THREE.Vector3(0.45, 0.3, 0.75),
+    position: new THREE.Vector3(0.45, 0.4, 0.75),
     element: document.querySelector(".floating-bubble-2"),
   },
 ];
@@ -457,19 +457,18 @@ function animateCameraForTransition(transitionAnimationName) {
     },
     onComplete: () => {
       // Sync OrbitControls with the final camera state
-      controls.target.copy(targetPositioncam);
+      gsap.to(controls.target, {
+        x: targetPositioncam.x,
+        y: targetPositioncam.y,
+        z: targetPositioncam.z,
+
+        duration: 1, // Match duration with position animation
+        ease: "power2.inOut",
+      });
+      // controls.target.copy(targetPositioncam);
       controls.update();
     },
   });
-
-  // gsap.to(camera.rotation, {
-  //   x: targetRotation.x,
-  //   y: targetRotation.y,
-  //   z: targetRotation.z,
-  //   delay: 1,
-  //   duration: 4, // Match duration with position animation
-  //   ease: "power2.inOut",
-  // });
 }
 
 function animateCameraToCharacter() {
