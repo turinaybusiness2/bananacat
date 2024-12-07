@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Panel</title>
+    <style>
+      /* Styles */
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      html,
+      body {
+        height: 100vh;
+        font-family: "ClashDisplay-Regular";
+        overflow: hidden;
+        background-color: #ff9a8b;
+        background: linear-gradient(
+            to bottom,
+            #323232 0%,
+            #3f3f3f 40%,
+            #1c1c1c 150%
+          ),
+          linear-gradient(
+            to top,
+            rgba(255, 255, 255, 0.4) 0%,
+            rgba(0, 0, 0, 0.25) 200%
+          );
+        background-blend-mode: multiply;
+      }
+
+      .admin-panel {
+        padding: 20px;
+      }
+
+      .admin-panel h2 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+
+      .admin-panel ul {
+        list-style-type: none;
+        padding: 0;
+      }
+
+      .admin-panel li {
+        background-color: #fff;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 10px;
+      }
+
+      .admin-panel button {
+        background-color: purple;
+        color: white;
+        padding: 10px 15px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        margin: 10px;
+      }
+
+      .admin-panel button:hover {
+        background-color: #0056b3;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="admin-panel" id="admin-panel">
+      <h2>Admin Panel</h2>
+      <div id="responses-container">
+        <h3>Responses</h3>
+        <ul id="responses-list"></ul>
+      </div>
+    </div>
+
+    <script type="module">
+      document.addEventListener("DOMContentLoaded", () => {
+        const responsesList = document.getElementById("responses-list");
+
+        // Fetch responses for the admin panel
+        async function fetchResponses() {
+          try {
+            const response = await fetch("/api/fetch-tweet-urls");
+            if (!response.ok) throw new Error("Failed to fetch Tweet URLs");
+            const data = await response.json();
+
+            responsesList.innerHTML = "";
+            data.forEach((item) => addResponseItem(item));
+          } catch (error) {
+            console.error("Error fetching Tweet URLs:", error);
+          }
+        }
+
+        // Add a response item to the list
+        function addResponseItem(item) {
+          const li = document.createElement("li");
+
+          const responseText = document.createElement("p");
+          // Display tweet URL as a clickable link
+          responseText.innerHTML = `<strong>Response:</strong> <a href="${sanitizeHTML(
+            item.tweet_url
+          )}" target="_blank">${sanitizeHTML(item.tweet_url)}</a>`;
+
+          const buttonContainer = document.createElement("div");
+          buttonContainer.classList.add("admin-buttons");
+
+          // Mark as Tweeted Button
+          const markButton = document.createElement("button");
+          markButton.textContent = "Mark as Tweeted";
+          markButton.addEventListener("click", () => markAsTweeted(item.id));
+          buttonContainer.appendChild(markButton);
+
+          li.appendChild(responseText);
+          li.appendChild(buttonContainer);
+          responsesList.appendChild(li);
+        }
+
+        // Mark a response as tweeted
+        async function markAsTweeted(id) {
+          try {
+            const response = await fetch("/api/mark-tweeted", {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify({ id }),
+            });
+
+            if (response.ok) {
+              alert("Response marked as tweeted!");
+              fetchResponses(); // Refresh the list
+            } else {
+              alert("Failed to mark as tweeted.");
+            }
+          } catch (error) {
+            console.error("Error marking as tweeted:", error);
+          }
+        }
+
+        // Sanitize HTML to prevent XSS
+        function sanitizeHTML(str) {
+          const div = document.createElement("div");
+          div.textContent = str;
+          return div.innerHTML;
+        }
+
+        // Initial load
+        fetchResponses();
+      });
+    </script>
+  </body>
+</html>

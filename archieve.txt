@@ -1,0 +1,349 @@
+import * as THREE from "three";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import GUI from "lil-gui";
+import { GLTFLoader } from "three/examples/jsm/loaders/GLTFLoader.js";
+import { RGBELoader } from "three/examples/jsm/loaders/RGBELoader.js";
+import { gsap } from "gsap";
+
+/**
+ * Loaders
+ */
+
+const loadingBarElement = document.querySelector(".loading");
+
+let sceneReady = false;
+let innerBody = null;
+let bikini = null;
+let dress = null;
+
+const loadingManager = new THREE.LoadingManager(
+  // Loaded
+  () => {
+    // setTimeout(() => {
+    //   loadingBarElement.classList.add("hidden");
+    //   setTimeout(() => {
+    //     loadingBarElement.style.display = "none"; s
+    //   }, 500);
+    // }, 1000);
+    // window.setTimeout(() => {
+    //   blackOverlay.classList.add("ended");
+    //   blackOverlay.style.transform = "";
+    //   sceneReady = true;
+    // }, 2000);
+  }
+
+  // Progress
+);
+
+const gltfLoader = new GLTFLoader(loadingManager);
+const rgbeLoader = new RGBELoader(loadingManager);
+const textureLoader = new THREE.TextureLoader(loadingManager);
+/**
+ * Base
+ */
+
+// Canvas
+const canvas = document.querySelector("canvas.webgl");
+
+// Scene
+const scene = new THREE.Scene();
+
+/**
+ * Update all materials
+ */
+
+/**
+ * Environment map
+ */
+// Intensity
+scene.environmentIntensity = 2;
+// gui.add(scene, "environmentIntensity").min(0).max(10).step(0.001);
+
+// HDR (RGBE) equirectangular
+rgbeLoader.load(
+  "./environmentMaps/0/2k.hdr",
+  (environmentMap) => {
+    environmentMap.mapping = THREE.EquirectangularReflectionMapping;
+    scene.environment = environmentMap;
+  },
+  undefined,
+  (error) => {
+    console.error("Error loading environment map:", error);
+  }
+);
+/**
+ * Directional light
+ */
+const directionalLight = new THREE.DirectionalLight("#ffffff", 4);
+directionalLight.position.set(1, 5, 5);
+
+scene.add(directionalLight);
+directionalLight.castShadow = true;
+directionalLight.shadow.camera.far = 15;
+directionalLight.shadow.normalBias = 0.027;
+directionalLight.shadow.bias = -0.004;
+directionalLight.shadow.mapSize.set(1024, 1024);
+
+// Target
+// directionalLight.target.position.set(0, 4, 0);
+// directionalLight.target.updateWorldMatrix();
+
+// // Helper
+
+// Animation mixer
+let mixer;
+
+/**
+ * Models
+ */
+// Shadow Plane
+
+const shadowMat = new THREE.ShadowMaterial({ opacity: 0.25 }); // ShadowMaterial for transparent shadows
+let actions = {};
+let currentAction;
+let roadMat;
+// Define stops and animations
+const stops = {
+  about: {
+    name: "about",
+    transitions: {
+      ca: "about-ca",
+      x: "about-x",
+    },
+  },
+  ca: {
+    name: "ca",
+    transitions: {
+      about: "ca-about",
+      x: "ca-x",
+    },
+  },
+  x: {
+    name: "x",
+    transitions: {
+      about: "x-about",
+      ca: "x-ca",
+    },
+  },
+};
+let currentStop = "about"; // Starting stop
+let walkAction, transitionAction;
+gltfLoader.load("/models/anim5.glb", (gltf) => {
+  gltf.scene.scale.set(0.05, 0.05, 0.05);
+  gltf.scene.position.y -= 1.5;
+  // gltf.scene.position.x -= 2.15;
+  scene.add(gltf.scene);
+  // gltf.scene.traverse((node) => {
+  //   if (node.isMesh) {
+  //     // Check if the node's parent is named "Armature" and enable shadow casting
+  //     if (node.parent && node.parent.name === "model_0002") {
+  //       node.castShadow = true;
+  //       console.log(node);
+  //     }
+  //   }
+  // });
+  console.log(gltf.animations.map((clip) => clip.name));
+  roadMat = gltf.scene.getObjectByName("GLTF_created_0");
+
+  mixer = new THREE.AnimationMixer(gltf.scene);
+
+  // Extract the desired animation
+  const sceneAnimation = THREE.AnimationClip.findByName(
+    gltf.animations,
+    "Take 001"
+  );
+
+  if (sceneAnimation) {
+    // Create and play the animation action
+    const sceneAction = mixer.clipAction(sceneAnimation);
+    sceneAction.setLoop(THREE.LoopRepeat); // Loop the animation
+    sceneAction.play();
+  }
+  let currentStop = "about"; // Starting stop
+  let walkAction, transitionAction;
+
+  // Set up mixer and animations
+  mixer = new THREE.AnimationMixer(gltf.scene);
+
+  // Load walk animation
+  const walkAnimation = THREE.AnimationClip.findByName(
+    gltf.animations,
+    "metarigAction.001"
+  );
+  walkAction = mixer.clipAction(walkAnimation);
+  walkAction.setLoop(THREE.LoopRepeat);
+
+  // Add event listener to detect when animations end
+  mixer.addEventListener("finished", (e) => {
+    if (e.action === transitionAction) {
+      // Stop walk animation when the transition ends
+      walkAction.stop();
+    }
+  });
+});
+function moveTo(targetStop) {
+  if (targetStop === currentStop) return; // No action if already at the stop
+
+  // Get the transition animation
+  const transitionAnimationName = stops[currentStop].transitions[targetStop];
+  const transitionAnimation = THREE.AnimationClip.findByName(
+    gltf.animations,
+    transitionAnimationName
+  );
+
+  if (transitionAnimation) {
+    // Stop current transition and walk animations
+    if (transitionAction) transitionAction.stop();
+    walkAction.stop();
+
+    // Play transition animation
+    transitionAction = mixer.clipAction(transitionAnimation);
+    transitionAction.setLoop(THREE.LoopOnce);
+    transitionAction.clampWhenFinished = true;
+    transitionAction.play();
+
+    // Start walk animation
+    walkAction.play();
+
+    // Update current stop after transition
+    transitionAction.addEventListener("finished", () => {
+      currentStop = targetStop;
+    });
+  } else {
+    console.error(
+      `No transition animation found from ${currentStop} to ${targetStop}`
+    );
+  }
+}
+// Create buttons
+function createButton(name) {
+  const button = document.createElement("button");
+  button.innerText = name;
+  button.onclick = () => moveTo(name);
+  document.body.appendChild(button);
+}
+
+["about", "ca", "x"].forEach((stop) => createButton(stop));
+// Helper function to wait for the current animation to finish
+
+/**
+ * Sizes
+ */
+const sizes = {
+  width: window.innerWidth,
+  height: window.innerHeight,
+};
+
+window.addEventListener("resize", () => {
+  // Update sizes
+  sizes.width = window.innerWidth;
+  sizes.height = window.innerHeight;
+
+  // Update camera
+  camera.aspect = sizes.width / sizes.height;
+  camera.updateProjectionMatrix();
+
+  // Update renderer
+  renderer.setSize(sizes.width, sizes.height);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+});
+
+/**
+ * Camera
+ */
+// Base camera
+// Base camera
+
+const camera = new THREE.PerspectiveCamera(
+  75,
+  sizes.width / sizes.height,
+  0.1,
+  3000
+);
+// Set the logged position and rotation values
+camera.position.set(2.2976039709937055, -0.02294624341529586, 4.44077577258603);
+camera.rotation.set(
+  0.005167124028499764,
+  0.477455578467337,
+  -0.0023744176068166913
+);
+scene.add(camera);
+
+// Controls
+const controls = new OrbitControls(camera, canvas);
+controls.enableDamping = true; // Smooth camera movements
+// // controls.target.y = 3.5;
+// controls.enableDamping = true;
+
+// controls.dampingFactor = 0.05; // Adjust the damping factor for smoothness
+// controls.enablePan = false;
+// controls.enableZoom = false;
+// Lock Y-axis rotation
+// controls.minPolarAngle = Math.PI / 2.5; // Minimum angle (90 degrees)
+// controls.maxPolarAngle = Math.PI / 2.5; // Maximum angle (90 degrees)
+// Limit X-axis (horizontal) rotation to 180 degrees
+// controls.minAzimuthAngle = -Math.PI / 2.5; // -90 degrees
+// controls.maxAzimuthAngle = Math.PI / 2.5; // 90 degrees
+
+/**
+ * Renderer
+ */
+const renderer = new THREE.WebGLRenderer({
+  canvas: canvas,
+  antialias: true,
+});
+renderer.setClearColor(0x1c1c1c, 0);
+renderer.setSize(sizes.width, sizes.height);
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap; // Soft shadows
+// Tone mapping
+renderer.toneMapping = THREE.NoToneMapping;
+renderer.toneMappingExposure = 1;
+
+/**
+ * Animate
+ */
+
+const cameraHelper = new THREE.Mesh(
+  new THREE.SphereGeometry(0.1),
+  new THREE.MeshBasicMaterial({ color: 0xff0000 })
+);
+scene.add(cameraHelper);
+
+cameraHelper.position.copy(camera.position);
+// Clock
+const clock = new THREE.Clock();
+const smoothness = 0.1;
+const offset = new THREE.Vector3(0, 1, 2);
+const tick = () => {
+  // Update controls
+  controls.update();
+  // if (roadMat) {
+  //   // Get the current position of the target object
+  //   const targetPosition = roadMat.getWorldPosition(new THREE.Vector3());
+
+  //   // Calculate the adjusted camera position using the offset
+  //   const adjustedCameraPosition = targetPosition.clone().add(offset);
+
+  //   // Smoothly interpolate the camera position toward the adjusted position
+  //   camera.position.lerp(adjustedCameraPosition, smoothness);
+
+  //   // Make the camera look at the target (without offset, to focus on the object)
+  //   camera.lookAt(targetPosition);
+  // }
+
+  // Update controls
+  controls.update();
+  // Update mixer if it's defined
+  if (mixer) mixer.update(clock.getDelta() * 1);
+  // Animate smoke
+
+  // Render
+  renderer.render(scene, camera);
+
+  // Call tick again on the next frame
+  window.requestAnimationFrame(tick);
+};
+
+tick();

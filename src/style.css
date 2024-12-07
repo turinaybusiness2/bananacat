@@ -1,0 +1,695 @@
+@import url("https://fonts.googleapis.com/css?family=Open+Sans:400,400i,700");
+/* Font Imports */
+@font-face {
+  font-family: "ClashDisplay-Extralight";
+  src: url("../fonts/ClashDisplay-Extralight.woff2") format("woff2"),
+    url("../fonts/ClashDisplay-Extralight.woff") format("woff"),
+    url("../fonts/ClashDisplay-Extralight.ttf") format("truetype");
+  font-weight: 200;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "ClashDisplay-Light";
+  src: url("../fonts/ClashDisplay-Light.woff2") format("woff2"),
+    url("../fonts/ClashDisplay-Light.woff") format("woff"),
+    url("../fonts/ClashDisplay-Light.ttf") format("truetype");
+  font-weight: 300;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "ClashDisplay-Regular";
+  src: url("../fonts/ClashDisplay-Regular.woff2") format("woff2"),
+    url("../fonts/ClashDisplay-Regular.woff") format("woff"),
+    url("../fonts/ClashDisplay-Regular.ttf") format("truetype");
+  font-weight: 400;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "ClashDisplay-Medium";
+  src: url("../fonts/ClashDisplay-Medium.woff2") format("woff2"),
+    url("../fonts/ClashDisplay-Medium.woff") format("woff"),
+    url("../fonts/ClashDisplay-Medium.ttf") format("truetype");
+  font-weight: 500;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "ClashDisplay-Semibold";
+  src: url("../fonts/ClashDisplay-Semibold.woff2") format("woff2"),
+    url("../fonts/ClashDisplay-Semibold.woff") format("woff"),
+    url("../fonts/ClashDisplay-Semibold.ttf") format("truetype");
+  font-weight: 600;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "ClashDisplay-Bold";
+  src: url("../fonts/ClashDisplay-Bold.woff2") format("woff2"),
+    url("../fonts/ClashDisplay-Bold.woff") format("woff"),
+    url("../fonts/ClashDisplay-Bold.ttf") format("truetype");
+  font-weight: 700;
+  font-display: swap;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Luckiest Guy";
+  src: url("/LuckiestGuy.ttf") format("truetype");
+  font-weight: normal;
+  font-style: normal;
+}
+
+/* Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* Main Layout */
+html,
+body {
+  height: 100vh;
+  font-family: "ClashDisplay-Regular";
+  overflow: hidden;
+  background: radial-gradient(
+    circle at 50% 60%,
+    rgb(40, 40, 40) 0%,
+    rgb(0, 0, 0) 99.4%
+  );
+
+  /* background-blend-mode: multiply; */
+}
+.loading {
+  opacity: 1;
+  visibility: visible;
+  opacity: 1; /* Initial state */
+  visibility: visible; /* Ensure it's visible initially */
+  transition: opacity 0.5s ease, visibility 0.5s ease; /* Smooth transition */
+}
+.loading .hidden {
+  opacity: 0; /* Fade out */
+  visibility: hidden; /* Hide the element after the fade-out */
+}
+
+.black-screen {
+  position: absolute;
+  height: 100vh;
+  width: 100vw;
+  z-index: 998;
+  background: radial-gradient(
+    circle at 50% 60%,
+    rgb(40, 40, 40) 0%,
+    rgb(0, 0, 0) 99.4%
+  );
+}
+.lottie {
+  position: absolute;
+  bottom: 50%; /* Adjust this value to move up or down */
+  left: 50%;
+  transform: translate(-50%, 50%);
+  z-index: 999;
+}
+h1 {
+  font-family: "ClashDisplay-Light";
+  font-size: 3rem;
+  letter-spacing: 3px;
+  color: white;
+}
+h2 {
+  font-family: "ClashDisplay-Medium";
+  font-size: 1.5rem;
+
+  letter-spacing: 3px;
+  color: white;
+}
+.none {
+  visibility: hidden;
+  display: none;
+}
+.webgl {
+  position: fixed;
+  top: 0;
+  right: 0;
+  width: 100%;
+  height: 100vh;
+  outline: none;
+  z-index: 2;
+}
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+.overlay-container {
+  text-align: center;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 30px 50px;
+  background-color: #1e201e;
+  border: 2.5px solid; /* Set the width and style */
+  border-color: #e0e0e0; /* Set the border color */
+  z-index: 10;
+  border-radius: 2px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+    rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
+    rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
+    rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
+    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
+
+.overlay-container h1 {
+  margin: 0 0 20px;
+  font-size: 2rem;
+}
+
+.overlay-container button {
+  padding: 8px 20px;
+  background-color: #f0f4f7;
+  color: #000;
+  font-weight: bold;
+  font-family: "ClashDisplay-Medium";
+  text-align: center;
+  font-size: 1.25rem;
+  /* border-right: 1px solid #d0d0d0; */
+  cursor: pointer;
+  border: 2.5px solid; /* Set the width and style */
+  border-color: #1e201e; /* Set the border color */
+}
+
+.overlay-container button:hover {
+  background-color: #e0e4e7;
+}
+
+/* Video Container */
+.video-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1; /* Keeps the video in the background */
+  overflow: hidden;
+}
+
+.background-video {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1.2);
+  width: 100%;
+  height: 100%;
+  object-fit: cover; /* Ensures the video covers the entire screen */
+  opacity: 1;
+}
+.centered {
+  position: absolute;
+  bottom: 5%; /* Adjust this value to move up or down */
+  left: 50%;
+  transform: translate(-50%, 0);
+}
+.ca {
+  position: absolute;
+  max-width: 100%;
+  left: 50%;
+  top: 15px;
+  transform: translate(-50%, 0);
+  z-index: 15 !important; /* Ensure it stays on top */
+  /* width: 40em; */
+  /* margin: 10px; */
+  border: 2.5px solid; /* Set the width and style */
+  border-color: #e0e0e0; /* Set the border color */
+  /* border-radius: 5px; */
+  padding: 0.5em 0.5em;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+  background: transparent;
+
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 90%;
+  visibility: hidden;
+}
+.ca p {
+  font-size: 1rem;
+  font-weight: bold;
+  /* text-transform: uppercase; */
+  text-align: center;
+  color: white; /* Set the border color */
+}
+.top-right-text {
+  position: absolute;
+  top: 20px; /* Adjust vertical position */
+  right: 20px; /* Adjust horizontal position */
+  z-index: 10000; /* Ensure it stays on top */
+  /* font-family: "ClashDisplay-Bold"; */
+  font-family: "Luckiest Guy";
+  font-size: 2.5rem; /* Adjust size as needed */
+  color: white; /* Text color */
+  text-align: right; /* Align text to the right */
+  text-shadow: 0.05em -0.03em 0 rgba(0, 0, 0, 1),
+    0.05em 0.005em 0 rgba(0, 0, 0, 1), 0em 0.08em 0 rgba(0, 0, 0, 1),
+    0.05em 0.08em 0 rgba(0, 0, 0, 1), 0px -0.03em 0 rgba(0, 0, 0, 1),
+    -0.03em -0.03em 0 rgba(0, 0, 0, 1), -0.03em 0.08em 0 rgba(0, 0, 0, 1),
+    -0.03em 0 0 rgba(0, 0, 0, 1);
+  line-height: 1.2; /* Adjust line height for readability */
+  max-width: 40%; /* Optional: Constrain the text width */
+  word-wrap: break-word;
+  text-transform: uppercase;
+}
+.container {
+  visibility: hidden;
+  display: flex;
+  flex-wrap: wrap;
+
+  justify-content: center;
+  align-items: center;
+  width: 30%;
+  height: 17.5%;
+  background-color: #1e201e;
+  border: 2.5px solid; /* Set the width and style */
+  border-color: #e0e0e0; /* Set the border color */
+  z-index: 10;
+  border-radius: 2px;
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+    rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
+    rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
+    rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
+    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+}
+
+.step2 {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  position: absolute;
+  align-items: center;
+  gap: 10px; /* Adjust as needed for the gap size */
+}
+
+/* STEP 1 */
+.connect-Twitter {
+  font-family: "ClashDisplay-Medium";
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  background-color: #f0f4f7;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  font-weight: bold;
+  color: #000;
+  cursor: pointer;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+  width: auto;
+  max-width: 200px; /* Set a max width for Connect button */
+}
+.connect-Twitter svg {
+  width: 20px;
+  height: 20px;
+  margin-right: 8px;
+  fill: #000;
+}
+/* STEP 2 */
+form {
+  width: 90%;
+}
+.input-group {
+  display: flex;
+  align-items: center;
+  border-radius: 2px;
+
+  border: 2.5px solid #e0e0e0;
+  background-color: #1a1a1a8c;
+}
+input[type="text"] {
+  flex: 1;
+  border: none;
+  background: transparent !important;
+  outline: none;
+  font-size: 1rem;
+  color: #ffffff;
+  padding: 0.5rem;
+}
+
+input[type="text"]::placeholder {
+  color: #aaaaaa;
+  font-style: italic;
+}
+.checkbutton {
+  font-family: "ClashDisplay-Medium";
+  letter-spacing: 1px;
+  padding: 0.5rem 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  background-color: #f0f4f7;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.checkbutton:hover {
+  background-color: #bbbbbb;
+}
+.confess-button-container {
+  display: flex;
+  align-items: center;
+  border-radius: 2.5px;
+  overflow: hidden;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  background-color: #f0f4f7;
+  width: fit-content;
+  cursor: pointer;
+}
+.confess-action {
+  padding: 8px 20px;
+  background-color: #f0f4f7;
+  color: #000;
+  font-weight: bold;
+  font-family: "ClashDisplay-Medium";
+  text-align: center;
+  /* border-right: 1px solid #d0d0d0; */
+  cursor: pointer;
+  border: 2.5px solid; /* Set the width and style */
+  border-color: #1e201e; /* Set the border color */
+}
+
+.confess-action:hover {
+  background-color: #e0e4e7;
+}
+
+/* STEP 3 */
+
+.comment-box {
+  width: 90%;
+  height: 50%;
+  padding: 6px;
+  font-size: 0.85rem;
+  border-radius: 5px;
+  /* margin-bottom: 10px; */
+  resize: none; /* Disable resizing for consistency */
+  border: 1px solid #e0e0e0;
+  background-color: #1a1a1a8c;
+  color: #ffffff;
+}
+.comment-box:focus {
+  outline: none;
+  border: 1px solid white; /* Optional: Change border color on focus */
+}
+.confess-submit {
+  font-family: "ClashDisplay-Medium";
+  letter-spacing: 1px;
+  padding: 0.5rem 0.5rem;
+  font-size: 1rem;
+  font-weight: 500;
+  color: #000;
+  background-color: #f0f4f7;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+.confess-submit:hover {
+  background-color: #e0e4e7;
+}
+.speech-bubble {
+  position: absolute;
+  top: 35%;
+  left: 70%;
+  transform: translate(-50%, -50%);
+  z-index: 12;
+  width: 20em;
+}
+.speech-text {
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  position: relative;
+  max-width: 20em;
+  color: black;
+  background-color: #fff;
+  padding: 1em 1em;
+  font-size: 1.25em;
+  border-radius: 1rem;
+  box-shadow: 0 0.125rem 0.5rem rgba(0, 0, 0, 0.3),
+    0 0.0625rem 0.125rem rgba(0, 0, 0, 0.2);
+  z-index: 12;
+}
+
+@media (max-width: 768px) {
+  .container {
+    width: 90%;
+  }
+  .speech-bubble {
+    position: absolute;
+    top: 70%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 12;
+    width: 20em;
+  }
+  .speech-text {
+    padding: 1em 1em;
+  }
+  .ca {
+    max-width: 90%;
+    left: 50%;
+    top: 10px;
+    transform: translate(-50%, 0);
+    margin: 0;
+    backdrop-filter: blur(0px);
+    -webkit-backdrop-filter: blur(0px);
+  }
+  .overlay-container {
+    padding: 30px 40px;
+  }
+  .step2 {
+    gap: 5px;
+  }
+}
+#button-container {
+  position: absolute;
+  bottom: 75px; /* Adjust this value to control distance from the bottom */
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+:root {
+  --backgroundColor: rgba(245, 199, 122, 1); /* Soft dark yellow background */
+  --colorShadeA: rgb(214, 156, 58); /* Rich dark golden yellow */
+  --colorShadeB: rgb(243, 181, 83); /* Warm yellow accent */
+  --colorShadeC: rgb(245, 199, 122); /* Main character color */
+  --colorShadeD: rgb(255, 221, 158); /* Light golden yellow */
+  --colorShadeE: rgb(255, 239, 198); /* Pale creamy yellow */
+}
+
+button {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  font-size: 0.85rem;
+  color: var(--colorShadeA);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-family: inherit;
+  z-index: 12;
+}
+button:disabled {
+  cursor: not-allowed; /* Show a "not allowed" cursor */
+}
+
+button.big-button {
+  padding: 1em 2em;
+  border: 2px solid var(--colorShadeA);
+  border-radius: 1em;
+  background: var(--colorShadeE);
+  transform-style: preserve-3d;
+  transition: all 175ms cubic-bezier(0, 0, 1, 1);
+}
+
+button.big-button:hover:not(:disabled) {
+  background: var(--colorShadeD);
+  transform: translate(0, 0.375em);
+}
+
+button.big-button::before {
+  position: absolute;
+  content: "";
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--colorShadeC);
+  border-radius: inherit;
+  box-shadow: 0 0 0 2px var(--colorShadeB), 0 0.75em 0 0 var(--colorShadeA);
+  transform: translate3d(0, 0.75em, -1em);
+  transition: all 175ms cubic-bezier(0, 0, 1, 1);
+}
+
+button.big-button:hover:not(:disabled)::before {
+  transform: translate3d(0, 0.75em, -1em);
+}
+
+button.big-button:active:not(:disabled) {
+  transform: translate(0em, 0.75em);
+}
+
+button.big-button:active:not(:disabled)::before {
+  transform: translate3d(0, 0, -1em);
+  box-shadow: 0 0 0 2px var(--colorShadeB), 0 0.25em 0 0 var(--colorShadeB);
+}
+
+button.active {
+  background: var(--colorShadeD); /* Use a highlight color */
+  cursor: default; /* Disable pointer cursor for the active button */
+  transform: translate(0, 0.375em);
+}
+button.active:hover {
+  background: var(--colorShadeD); /* Keep the same background on hover */
+  transform: none; /* Prevent hover effect */
+}
+.cat {
+  position: relative;
+  width: 100%;
+  max-width: 20em;
+  overflow: hidden;
+  /* background-color: #e6dcdc; */
+}
+.cat::before {
+  content: "";
+  display: block;
+  padding-bottom: 100%;
+}
+.cat:hover > * {
+  -webkit-animation-play-state: paused;
+  animation-play-state: paused;
+}
+.cat:active > * {
+  -webkit-animation-play-state: running;
+  animation-play-state: running;
+}
+
+.cat__head,
+.cat__tail,
+.cat__body {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  -webkit-animation: rotating 2.79s cubic-bezier(0.65, 0.54, 0.12, 0.93)
+    infinite;
+  animation: rotating 2.79s cubic-bezier(0.65, 0.54, 0.12, 0.93) infinite;
+}
+.cat__head::before,
+.cat__tail::before,
+.cat__body::before {
+  content: "";
+  position: absolute;
+  width: 50%;
+  height: 50%;
+  background-size: 200%;
+  background-repeat: no-repeat;
+  background-image: url("cat.png");
+}
+
+.cat__head::before {
+  top: 0;
+  right: 0;
+  background-position: 100% 0%;
+  -webkit-transform-origin: 0% 100%;
+  transform-origin: 0% 100%;
+  -webkit-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+
+.cat__tail {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+.cat__tail::before {
+  left: 0;
+  bottom: 0;
+  background-position: 0% 100%;
+  -webkit-transform-origin: 100% 0%;
+  transform-origin: 100% 0%;
+  -webkit-transform: rotate(-30deg);
+  transform: rotate(-30deg);
+}
+
+.cat__body {
+  -webkit-animation-delay: 0.1s;
+  animation-delay: 0.1s;
+}
+.cat__body:nth-of-type(2) {
+  -webkit-animation-delay: 0.2s;
+  animation-delay: 0.2s;
+}
+.cat__body::before {
+  right: 0;
+  bottom: 0;
+  background-position: 100% 100%;
+  -webkit-transform-origin: 0% 0%;
+  transform-origin: 0% 0%;
+}
+
+@-webkit-keyframes rotating {
+  from {
+    -webkit-transform: rotate(720deg);
+    transform: rotate(720deg);
+  }
+  to {
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+
+@keyframes rotating {
+  from {
+    -webkit-transform: rotate(720deg);
+    transform: rotate(720deg);
+  }
+  to {
+    -webkit-transform: none;
+    transform: none;
+  }
+}
+.box {
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  position: absolute;
+  z-index: 15;
+  flex: 1;
+  flex-direction: column;
+  justify-content: flex-start;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--backgroundColor);
+}

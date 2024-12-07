@@ -1,0 +1,27 @@
+{
+  "name": "forgivemeai",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "start": "vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.4.11",
+    "vite-plugin-restart": "^0.4.1"
+  },
+  "dependencies": {
+    "@vercel/analytics": "^1.4.0",
+    "concurrently": "^7.6.0",
+    "cors": "^2.8.5",
+    "dotenv": "^16.0.3",
+    "gsap": "^3.12.5",
+    "lil-gui": "^0.19.2",
+    "openai": "^4.71.1",
+    "pg": "^8.13.1",
+    "three": "^0.166.1",
+    "twitter-api-v2": "^1.9.0"
+  }
+}
