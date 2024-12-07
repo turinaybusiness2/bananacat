@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Chillionaire</title>
+    <title>Banana Cat</title>
     <link
       rel="apple-touch-icon"
       sizes="57x57"
@@ -84,11 +84,24 @@
       src="https://unpkg.com/@dotlottie/player-component@2.7.12/dist/dotlottie-player.mjs"
       type="module"
     ></script> -->
-    <script type="module" crossorigin src="/assets/index-B7QJ-p9g.js"></script>
-    <link rel="stylesheet" crossorigin href="/assets/index-CmEI67d2.css">
+    <script type="module" crossorigin src="/assets/index-Bq__5dJG.js"></script>
+    <link rel="stylesheet" crossorigin href="/assets/index-DcitWkph.css">
   </head>
   <body>
-    <div id="overlay" class="overlay">
+    <div class="box">
+      <div class="cat">
+        <div class="cat__body"></div>
+        <div class="cat__body"></div>
+        <div class="cat__tail"></div>
+        <div class="cat__head"></div>
+      </div>
+    </div>
+    <div id="button-container">
+      <button class="big-button" id="button-about">About</button>
+      <button class="big-button" id="button-ca">CA</button>
+      <button class="big-button" id="button-x">X</button>
+    </div>
+    <!-- <div id="overlay" class="overlay">
       <div class="overlay-container">
         <h1>Are You Chill?</h1>
         <button id="chillButton">Yes</button>
@@ -96,7 +109,7 @@
     </div>
     <div class="top-right-text">
       No DEV, no CA, no CTO, just a chillionaire that makes other billionaire
-    </div>
+    </div> -->
     <!-- <div class="loading">
       <div class="black-screen"></div>
       <div class="lottie">
@@ -111,7 +124,7 @@
       </div>
     </div> -->
 
-    <div class="container centered" id="mainContainer">
+    <!-- <div class="container centered" id="mainContainer">
       <div class="step2" id="tweet-step">
         <form id="tweetCheck" autocomplete="off">
           <div class="input-group">
@@ -122,9 +135,7 @@
               required
               placeholder="Paste the Tweet URL"
             />
-            <!-- <button id="check-button" class="checkbutton" type="submit">
-              Check
-            </button> -->
+      
           </div>
         </form>
         <div
@@ -138,18 +149,19 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
 
     <canvas class="webgl"></canvas>
-    <div class="ca">
+    <!-- <div class="ca">
       <p>CA:</p>
-    </div>
+    </div> -->
 
-    <div class="video-container">
+    <!-- <div class="video-container">
       <video class="background-video" autoplay muted loop playsinline>
         <source src="/bg.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
-    </div>
+    </div> -->
+    <!-- <script type="module" src="./js/controller.js"></script> -->
   </body>
 </html>
