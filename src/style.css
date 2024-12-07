@@ -487,6 +487,20 @@ input[type="text"]::placeholder {
   .overlay-container {
     padding: 30px 40px;
   }
+  .overlay-container h1 {
+    margin: 0 0 20px;
+    font-size: 1.25rem;
+    text-shadow: 3px 3px rgb(214, 156, 58); /* Blue */
+  }
+  #button-container {
+    display: flex; /* Use flexbox for alignment */
+    flex-direction: row; /* Default layout (horizontal) */
+    justify-content: center;
+    align-items: center;
+    flex-direction: row; /* Stack buttons vertically on smaller screens */
+    gap: 15px; /* Increase spacing for better usability */
+    width: 90%; /* Optional: Adjust width for smaller screens */
+  }
   .step2 {
     gap: 5px;
   }
