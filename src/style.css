@@ -492,6 +492,7 @@ input[type="text"]::placeholder {
   left: 50%;
   transform: translateX(-50%);
   z-index: 10;
+  font-family: "Baloo 2", cursive;
 }
 
 :root {
@@ -692,4 +693,62 @@ button.active:hover {
   justify-content: center;
   align-items: center;
   background-color: var(--backgroundColor);
+}
+/* Floating Bubble Styles */
+.floating-bubble {
+  position: absolute;
+
+  top: 50%;
+  left: 50%;
+
+  /* transform: translate(-50%, -50%); */
+  z-index: 12;
+  pointer-events: none; /* Prevent interactions */
+  /* animation: float 5s ease-in-out infinite; */
+  /* transform: scale(0, 0); */
+
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.floating-bubble.visible {
+  /* transform: scale(1, 1); */
+  opacity: 1;
+}
+
+.floating-bubble p {
+  /* transform: translatey(0px); */
+  text-align: center;
+  text-transform: uppercase;
+  font-weight: bold;
+  letter-spacing: 3px;
+  font-size: 15px;
+  color: #774f38; /* Brown */
+  background-color: #ece5ce; /* Beige */
+  padding: 30px;
+  border-radius: 11px;
+  position: relative;
+  box-shadow: 5px 5px rgb(214, 156, 58); /* Blue */
+  font-family: "Baloo 2", cursive;
+}
+
+.floating-bubble p:after {
+  /* transform: translatey(0px); */
+  /* animation: float2 5s ease-in-out infinite; */
+  content: ".";
+  font-weight: bold;
+  -webkit-text-fill-color: #ece5ce; /* Beige */
+  text-shadow: 5px 5px rgb(214, 156, 58); /* Blue */
+  text-align: left;
+  font-size: 55px;
+  width: 55px;
+  height: 11px;
+  line-height: 30px;
+  border-radius: 11px;
+  background-color: #ece5ce; /* Beige */
+  position: absolute;
+  display: block;
+  bottom: -30px;
+  left: 0;
+  box-shadow: 5px 5px rgb(214, 156, 58); /* Blue */
+  z-index: -2;
 }

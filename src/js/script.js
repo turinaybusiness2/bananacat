@@ -26,11 +26,9 @@ const loadingManager = new THREE.LoadingManager(
       }, 500); // Match the transition duration in CSS (0.5s)
     }, 1000); // Delay before starting the fade-out animation (optional)
 
-    // window.setTimeout(() => {
-    //   blackOverlay.classList.add("ended");
-    //   blackOverlay.style.transform = "";
-    //   sceneReady = true;
-    // }, 2000);
+    window.setTimeout(() => {
+      sceneReady = true;
+    }, 500);
   }
 
   // Progress
@@ -197,10 +195,24 @@ gltfLoader.load("/models/scene-base4.glb", (gltf) => {
   // }
 });
 const stops = {
-  about: { transitions: { ca: "about-ca", x: "about-x" } },
-  ca: { transitions: { about: "ca-about", x: "ca-x" } },
-  x: { transitions: { about: "x-about", ca: "x-ca" } },
+  about: { transitions: { ca: "about-ca", x: "about-x" }, index: 0 },
+  ca: { transitions: { about: "ca-about", x: "ca-x" }, index: 1 },
+  x: { transitions: { about: "x-about", ca: "x-ca" }, index: 2 },
 };
+const points = [
+  {
+    position: new THREE.Vector3(-1.5, 0.5, 0.75),
+    element: document.querySelector(".floating-bubble-0"),
+  },
+  {
+    position: new THREE.Vector3(1.5, 0.4, -2.4),
+    element: document.querySelector(".floating-bubble-1"),
+  },
+  {
+    position: new THREE.Vector3(0.45, 0.5, 0.75),
+    element: document.querySelector(".floating-bubble-2"),
+  },
+];
 let currentStop = "about";
 let walkAction, transitionAction;
 // Global variable to store the loaded GLTF model
@@ -249,7 +261,7 @@ gltfLoader.load("/models/anim10.glb", (gltf) => {
 });
 let isFirstAboutClick = true;
 let buttons = document.querySelectorAll("button");
-
+let isAnimating = false; // Track whether an animation is playing
 function moveTo(targetStop) {
   console.log(`Button clicked: ${targetStop}`);
   // if (targetStop === "about" && isFirstAboutClick) {
@@ -269,7 +281,10 @@ function moveTo(targetStop) {
 
   // Skip further actions if targetStop is the same as currentStop
   if (targetStop === currentStop) return;
-
+  points.forEach((point) => {
+    point.element.classList.remove("visible");
+  });
+  isAnimating = true;
   const transitionAnimationName = stops[currentStop].transitions[targetStop];
   console.log(`Transition Animation Name: ${transitionAnimationName}`);
 
@@ -328,6 +343,7 @@ function moveTo(targetStop) {
 
   transitionAction.play();
   walkAction.play();
+  animateCameraForTransition(transitionAnimationName);
   if (
     transitionAnimationName === "about-x" ||
     transitionAnimationName === "x-about"
@@ -342,7 +358,15 @@ function moveTo(targetStop) {
       console.log(`Transition to ${targetStop} completed.`);
       currentStop = targetStop;
       walkAction.paused = true;
-
+      points.forEach((point, index) => {
+        console.log(stops[currentStop].index);
+        if (index === stops[currentStop].index) {
+          point.element.classList.add("visible");
+        } else {
+          point.element.classList.remove("visible");
+        }
+      });
+      isAnimating = false;
       // Enable other buttons after the animation, but keep the clicked button disabled
       buttons.forEach((button) => {
         if (button.id !== `button-${targetStop}`) {
@@ -368,6 +392,77 @@ document
 document
   .getElementById("button-x")
   .addEventListener("click", () => moveTo("x"));
+function animateCameraForTransition(transitionAnimationName) {
+  let targetPosition = {};
+  let targetRotation = {};
+  let targetPositioncam;
+  // Determine the target position and rotation based on the animation name
+  if (
+    transitionAnimationName === "ca-about" ||
+    transitionAnimationName === "ca-x"
+  ) {
+    targetPosition = {
+      x: -0.6004865973820335,
+      y: 0.11812583581959962,
+      z: 3.794080233760782,
+    };
+    targetRotation = {
+      x: -0.001807360496999036,
+      y: -0.04082544780205027,
+      z: -0.00007376588670783165,
+    };
+    targetPositioncam = new THREE.Vector3(-0.5, 0, 1);
+  } else if (
+    transitionAnimationName === "about-ca" ||
+    transitionAnimationName === "x-ca"
+  ) {
+    targetPosition = {
+      x: 4.348235746364294,
+      y: 0.03506995725968839,
+      z: -1.8693496030449115,
+    };
+    targetRotation = {
+      x: -2.6637580336624467,
+      y: 1.5598575201709926,
+      z: 2.6637824647995068,
+    };
+    targetPositioncam = new THREE.Vector3(-1, 0, -2);
+  } else {
+    console.warn(
+      `No camera animation defined for transition: ${transitionAnimationName}`
+    );
+    return;
+  }
+
+  // Animate camera position and rotation using GSAP
+  gsap.to(camera.position, {
+    x: targetPosition.x,
+    y: targetPosition.y,
+    z: targetPosition.z,
+    duration: 2, // Adjust duration as needed
+    delay: 2,
+    ease: "power2.inOut",
+    onUpdate: () => {
+      // controls.update();
+      // camera.lookAt(new THREE.Vector3(-1, 0, -2)); // Adjust focus if needed
+      camera.lookAt(targetPositioncam); // Adjust focus if needed
+    },
+    onComplete: () => {
+      // Sync OrbitControls with the final camera state
+      controls.target.copy(targetPositioncam);
+      controls.update();
+    },
+  });
+
+  gsap.to(camera.rotation, {
+    x: targetRotation.x,
+    y: targetRotation.y,
+    z: targetRotation.z,
+    delay: 1,
+    duration: 4, // Match duration with position animation
+    ease: "power2.inOut",
+  });
+}
 
 function animateCameraToCharacter() {
   if (!roadMat) {
@@ -474,6 +569,7 @@ function trackCameraToCharacter() {
 /**
  * Animate
  */
+const raycaster = new THREE.Raycaster();
 
 const clock = new THREE.Clock();
 window.addEventListener("keydown", (event) => {
@@ -495,7 +591,56 @@ function logCameraPositionAndRotation() {
     z: camera.rotation.z, // Rotation around Z-axis (roll)
   });
 }
+
 const tick = () => {
+  if (sceneReady) {
+    // Find the point corresponding to the current stop
+    const selectedPoint = points[stops[currentStop].index];
+
+    if (selectedPoint && !isAnimating) {
+      // Get 2D screen position
+      const screenPosition = selectedPoint.position.clone();
+      screenPosition.project(camera);
+
+      // Set the raycaster
+      raycaster.setFromCamera(screenPosition, camera);
+      const intersects = raycaster.intersectObjects(scene.children, true);
+
+      // Visibility logic for the selected point
+      if (intersects.length === 0) {
+        selectedPoint.element.classList.add("visible"); // Show
+      } else {
+        const intersectionDistance = intersects[0].distance;
+        const pointDistance = selectedPoint.position.distanceTo(
+          camera.position
+        );
+
+        if (intersectionDistance < pointDistance) {
+          selectedPoint.element.classList.remove("visible"); // Hide
+        } else {
+          selectedPoint.element.classList.add("visible"); // Show
+        }
+      }
+
+      // Update screen position
+      const translateX = screenPosition.x * sizes.width * 0.5;
+      const translateY = -screenPosition.y * sizes.height * 0.5;
+      selectedPoint.element.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`;
+    }
+  }
+  // if (sceneReady) {
+  //   // Update visible points' position on the screen
+  //   points.forEach((point) => {
+  //     if (point.element.classList.contains("visible")) {
+  //       const screenPosition = point.position.clone();
+  //       screenPosition.project(camera);
+
+  //       const translateX = screenPosition.x * sizes.width * 0.5;
+  //       const translateY = -screenPosition.y * sizes.height * 0.5;
+  //       point.element.style.transform = `translateX(${translateX}px) translateY(${translateY}px)`;
+  //     }
+  //   });
+  // }
   if (mixer) mixer.update(clock.getDelta());
 
   renderer.render(scene, camera);
