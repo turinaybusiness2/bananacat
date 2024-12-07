@@ -224,7 +224,12 @@ gltfLoader.load("/models/anim10.glb", (gltf) => {
   loadedModel = gltf;
   gltf.scene.scale.set(0.05, 0.05, 0.05);
   gltf.scene.position.y -= 1.2;
-
+  gltf.scene.getObjectByName("body_normal_0").visible = false;
+  gltf.scene.getObjectByName("leaf_normal_0").visible = false;
+  gltf.scene.getObjectByName("foot1_normal_0").visible = false;
+  gltf.scene.getObjectByName("foot2_normal_0").visible = false;
+  gltf.scene.getObjectByName("hand1_normal_0").visible = false;
+  gltf.scene.getObjectByName("hand2_normal_0").visible = false;
   gltf.scene.getObjectByName("GLTF_created_0").position.y -= 0.3;
   scene.add(gltf.scene);
 
