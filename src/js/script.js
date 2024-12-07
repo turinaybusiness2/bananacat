@@ -14,13 +14,13 @@ let sceneReady = false;
 let innerBody = null;
 let bikini = null;
 let dress = null;
-const loadingBarElement = document.querySelector(".box");
+const loadingBarElement = document.querySelector(".loading");
 
 const loadingManager = new THREE.LoadingManager(
   // Loaded
   () => {
     setTimeout(() => {
-      // loadingBarElement.classList.add("hidden"); // Add class to start fade-out animation
+      loadingBarElement.classList.add("hidden"); // Add class to start fade-out animation
       setTimeout(() => {
         loadingBarElement.style.display = "none"; // Remove loading div after animation ends
       }, 500); // Match the transition duration in CSS (0.5s)
@@ -201,15 +201,15 @@ const stops = {
 };
 const points = [
   {
-    position: new THREE.Vector3(-1.5, 0.5, 0.75),
+    position: new THREE.Vector3(-1.5, 0.3, 0.75),
     element: document.querySelector(".floating-bubble-0"),
   },
   {
-    position: new THREE.Vector3(1.5, 0.4, -2.4),
+    position: new THREE.Vector3(1.5, 0.3, -2.4),
     element: document.querySelector(".floating-bubble-1"),
   },
   {
-    position: new THREE.Vector3(0.45, 0.5, 0.75),
+    position: new THREE.Vector3(0.45, 0.3, 0.75),
     element: document.querySelector(".floating-bubble-2"),
   },
 ];
