@@ -113,7 +113,7 @@ body {
   z-index: 999;
 }
 h1 {
-  font-family: "ClashDisplay-Light";
+  font-family: "Baloo 2", cursive;
   font-size: 3rem;
   letter-spacing: 3px;
   color: white;
@@ -150,43 +150,48 @@ h2 {
   justify-content: center;
   align-items: center;
   z-index: 9999;
+  visibility: hidden;
+  font-family: "Baloo 2", cursive;
 }
 .overlay-container {
   text-align: center;
   background: rgba(255, 255, 255, 0.1);
   padding: 30px 50px;
-  background-color: #1e201e;
-  border: 2.5px solid; /* Set the width and style */
+  background-color: rgba(245, 199, 122, 1);
+  border: 1px solid; /* Set the width and style */
   border-color: #e0e0e0; /* Set the border color */
   z-index: 10;
-  border-radius: 2px;
+  border-radius: 15px;
   backdrop-filter: blur(5px);
   -webkit-backdrop-filter: blur(5px);
 
-  box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
+  /* box-shadow: rgba(0, 0, 0, 0.17) 0px -23px 25px 0px inset,
     rgba(0, 0, 0, 0.15) 0px -36px 30px 0px inset,
     rgba(0, 0, 0, 0.1) 0px -79px 40px 0px inset, rgba(0, 0, 0, 0.06) 0px 2px 1px,
     rgba(0, 0, 0, 0.09) 0px 4px 2px, rgba(0, 0, 0, 0.09) 0px 8px 4px,
-    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px;
+    rgba(0, 0, 0, 0.09) 0px 16px 8px, rgba(0, 0, 0, 0.09) 0px 32px 16px; */
 }
 
 .overlay-container h1 {
   margin: 0 0 20px;
   font-size: 2rem;
+  text-shadow: 5px 5px rgb(214, 156, 58); /* Blue */
 }
 
 .overlay-container button {
   padding: 8px 20px;
-  background-color: #f0f4f7;
+  font-size: 1rem;
+
+  /* background-color: #f0f4f7;
   color: #000;
   font-weight: bold;
-  font-family: "ClashDisplay-Medium";
+  font-family: "Baloo 2", cursive;
   text-align: center;
-  font-size: 1.25rem;
-  /* border-right: 1px solid #d0d0d0; */
+
+
   cursor: pointer;
   border: 2.5px solid; /* Set the width and style */
-  border-color: #1e201e; /* Set the border color */
+  /* border-color: #1e201e;  */
 }
 
 .overlay-container button:hover {

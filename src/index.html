@@ -108,6 +108,12 @@
         ></dotlottie-player>
       </div>
     </div>
+    <div id="overlay" class="overlay">
+      <div class="overlay-container">
+        <h1>Do You Like Banana?</h1>
+        <button class="big-button" id="chillButton">Yes</button>
+      </div>
+    </div>
     <div class="floating-bubble floating-bubble-0">
       <p>Hello,<br />World!</p>
     </div>
@@ -185,5 +191,28 @@
     </div> -->
     <!-- <script type="module" src="./js/controller.js"></script> -->
     <script type="module" src="./js/script.js"></script>
+    <script>
+      var bgsfx = new Audio("/sfx/sfx2.mp3");
+      document.addEventListener("DOMContentLoaded", function () {
+        const overlay = document.getElementById("overlay");
+        const chillButton = document.getElementById("chillButton");
+
+        // Add click event listener to "Yes" button
+        chillButton.addEventListener("click", function () {
+          overlay.style.display = "none"; // Hide the overlay
+          bgsfx.loop = true; // Enable looping
+          bgsfx.muted = true; // Start muted for autoplay
+
+          bgsfx
+            .play()
+            .then(() => {
+              bgsfx.muted = false; // Unmute after playback starts
+            })
+            .catch((error) => {
+              console.log("Autoplay blocked. Waiting for user interaction.");
+            });
+        });
+      });
+    </script>
   </body>
 </html>

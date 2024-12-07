@@ -15,14 +15,15 @@ let innerBody = null;
 let bikini = null;
 let dress = null;
 const loadingBarElement = document.querySelector(".loading");
-
+const firstscene = document.querySelector(".overlay");
 const loadingManager = new THREE.LoadingManager(
   // Loaded
   () => {
     setTimeout(() => {
       loadingBarElement.classList.add("hidden"); // Add class to start fade-out animation
       setTimeout(() => {
-        loadingBarElement.style.display = "none"; // Remove loading div after animation ends
+        loadingBarElement.style.display = "none";
+        firstscene.style.visibility = "visible";
       }, 500); // Match the transition duration in CSS (0.5s)
     }, 1000); // Delay before starting the fade-out animation (optional)
 
@@ -285,6 +286,7 @@ function moveTo(targetStop) {
     point.element.classList.remove("visible");
   });
   isAnimating = true;
+  controls.enabled = false; // Disable controls
   const transitionAnimationName = stops[currentStop].transitions[targetStop];
   console.log(`Transition Animation Name: ${transitionAnimationName}`);
 
@@ -367,6 +369,7 @@ function moveTo(targetStop) {
         }
       });
       isAnimating = false;
+      controls.enabled = true; // Disable controls
       // Enable other buttons after the animation, but keep the clicked button disabled
       buttons.forEach((button) => {
         if (button.id !== `button-${targetStop}`) {
@@ -445,7 +448,7 @@ function animateCameraForTransition(transitionAnimationName) {
     onUpdate: () => {
       // controls.update();
       // camera.lookAt(new THREE.Vector3(-1, 0, -2)); // Adjust focus if needed
-      camera.lookAt(targetPositioncam); // Adjust focus if needed
+      // camera.lookAt(targetPositioncam); // Adjust focus if needed
     },
     onComplete: () => {
       // Sync OrbitControls with the final camera state
@@ -454,14 +457,14 @@ function animateCameraForTransition(transitionAnimationName) {
     },
   });
 
-  gsap.to(camera.rotation, {
-    x: targetRotation.x,
-    y: targetRotation.y,
-    z: targetRotation.z,
-    delay: 1,
-    duration: 4, // Match duration with position animation
-    ease: "power2.inOut",
-  });
+  // gsap.to(camera.rotation, {
+  //   x: targetRotation.x,
+  //   y: targetRotation.y,
+  //   z: targetRotation.z,
+  //   delay: 1,
+  //   duration: 4, // Match duration with position animation
+  //   ease: "power2.inOut",
+  // });
 }
 
 function animateCameraToCharacter() {
