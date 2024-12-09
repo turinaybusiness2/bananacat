@@ -115,6 +115,10 @@ controls.maxPolarAngle = Math.PI / 1.75;
 // Limit zoom
 controls.minDistance = 1; // Minimum zoom distance
 controls.maxDistance = 10; // Maximum zoom distance
+// Disable interactions
+controls.enableRotate = false; // Disable rotation
+controls.enableZoom = false; // Disable zoom
+controls.enablePan = false; // Disable panning
 controls.update();
 /**
  * Environment map
@@ -171,7 +175,7 @@ gltfLoader.load("/models/scene-base4.glb", (gltf) => {
   gltf.scene.scale.set(0.05, 0.05, 0.05);
 
   gltf.scene.position.y -= 1.175;
-
+  gltf.scene.getObjectByName("Cube").position.y = -3.5;
   gltf.scene.traverse((child) => {
     if (child.isMesh) {
       console.log(child.name); // Log all mesh names
@@ -202,7 +206,7 @@ const stops = {
 };
 const points = [
   {
-    position: new THREE.Vector3(-1.5, 0.4, 0.75),
+    position: new THREE.Vector3(-1.45, 0.6, 0.75),
     element: document.querySelector(".floating-bubble-0"),
   },
   {
@@ -210,7 +214,7 @@ const points = [
     element: document.querySelector(".floating-bubble-1"),
   },
   {
-    position: new THREE.Vector3(0.45, 0.4, 0.75),
+    position: new THREE.Vector3(0.45, 0.2, 0.75),
     element: document.querySelector(".floating-bubble-2"),
   },
 ];
@@ -223,7 +227,7 @@ let camAction; // To store the 'camAction' animation
 gltfLoader.load("/models/anim10.glb", (gltf) => {
   loadedModel = gltf;
   gltf.scene.scale.set(0.05, 0.05, 0.05);
-  gltf.scene.position.y -= 1.2;
+  gltf.scene.position.y -= 1.325;
   gltf.scene.getObjectByName("body_normal_0").visible = false;
   gltf.scene.getObjectByName("leaf_normal_0").visible = false;
   gltf.scene.getObjectByName("foot1_normal_0").visible = false;
@@ -374,7 +378,7 @@ function moveTo(targetStop) {
         }
       });
       isAnimating = false;
-      controls.enabled = true; // Disable controls
+
       // Enable other buttons after the animation, but keep the clicked button disabled
       buttons.forEach((button) => {
         if (button.id !== `button-${targetStop}`) {
